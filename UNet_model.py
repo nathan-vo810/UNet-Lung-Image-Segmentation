@@ -3,7 +3,7 @@ from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Dropout,merg
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 
-class UNet():
+class UNet:
     """UNet Implemenation"""
 
     def __init__(self, image_width = 512, image_height = 512):

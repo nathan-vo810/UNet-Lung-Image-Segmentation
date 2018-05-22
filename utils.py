@@ -8,4 +8,3 @@ class dataProcess(object):
     def load_train_data(self):
         print('Load training data')
         training_images =  np.load(self.npy_path)
-        
