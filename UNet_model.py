@@ -1,15 +1,17 @@
 from keras.models import Model
-from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Dropout,merge
+from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Dropout, merge
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
+from load_data import LoadData
+
 
 class UNet:
     """UNet Implemenation"""
 
-    def __init__(self, image_width = 512, image_height = 512):
+    def __init__(self, image_width=512, image_height=512):
         self.image_shape = (image_width, image_height)
 
-    def UNet(self):
+    def build_unet(self):
         inputs = Input(shape=self.image_shape)
 
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
@@ -67,17 +69,21 @@ class UNet:
         return model
 
     def train(self):
-        #Load data for training
+        # Load data for training
         print("Loading data")
-        #load data function -- to be implemented
+        # load data function -- to be implemented
+        data_loader = LoadData()
+        data_loader.load_images()
+        data_loader.load_label()
         print("Loading data - DONE")
 
-        #Build Model and Train
-        UNet_model = self.UNet()
+        # Build Model and Train
+        UNet_model = self.build_unet()
         print("Built Model")
         model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss', verbose=1, save_best_only=True)
         print("Fitting model...")
-        UNet_model.fit(batch_size=4, nb_epoch=10, verbose=1, validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+        UNet_model.fit(batch_size=4, nb_epoch=10, verbose=1, validation_split=0.2, shuffle=True,
+                       callbacks=[model_checkpoint])
 
         print("Predict test data")
         test_image = UNet_model.predict(batch_size=1, verbose=1)
