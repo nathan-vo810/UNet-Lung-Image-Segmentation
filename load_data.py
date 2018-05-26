@@ -1,4 +1,7 @@
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+import numpy as np
 import os
+import glob
 import cv2
 
 # dir & path
@@ -9,6 +12,11 @@ TEST_IMAGE_PATH = os.path.join(DIR, "./dataset/training_data/test/")
 
 IMAGE_PATH = TRAIN_IMAGE_PATH + "img/"
 LABEL_PATH = TRAIN_IMAGE_PATH + "label/"
+MERGE_PATH = TRAIN_IMAGE_PATH + "merge/"
+AUG_MERGE_PATH = TRAIN_IMAGE_PATH + "aug/"
+AUG_IMAGE_PATH = AUG_MERGE_PATH + "img/"
+AUG_LABEL_PATH = AUG_MERGE_PATH + "label/"
+
 SAVE_PATH = TRAIN_IMAGE_PATH + "result/"
 
 INPUT_SHAPE = (512, 512)
