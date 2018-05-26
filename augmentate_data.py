@@ -66,13 +66,14 @@ class myAugmentation(object):
             return 0
 
         # Loop over train image and augmentate data
-        filenames = glob.glob(path_train + "*." + img_type)
-        filenames = os.listdir(path_train)
-        for file in filenames:
+        # filenames = glob.glob(path_train + "*." + img_type)
+        files = os.listdir(path_train)
+        files = [file for file in files if file.endswith(self.img_type)]
+        for file in files:
             # Load image and label
-            if file.endswith(self.img_type):
-                img_train = load_img(path_train + file)
-                label_train = load_img(path_label + file)
+            print("Augmentation: " + file)
+            img_train = load_img(path_train + file)
+            label_train = load_img(path_label + file)
 
             # Convert image and label into arrays
             img_array = img_to_array(img_train)
@@ -102,6 +103,7 @@ class myAugmentation(object):
         for batch in data_generator.flow(img, batch_size=batch_size, save_to_dir=save_to_dir, save_prefix=save_prefix,
                                          save_format=save_format):
             i += 1
+            print("Finished: " + str(i))
             if i > imgnum:
                 break
 
@@ -113,14 +115,21 @@ class myAugmentation(object):
         path_train = self.aug_train_path
         path_label = self.aug_label_path
 
-        filenames = os.listdir(path_merge)
-        for file in filenames:
-            if file.endswith(self.img_type):
-                aug = cv2.imread(file)
-                img_aug = aug[:,:,2]
-                label_aug = aug[:,:,0]
-                cv2.imwrite(path_train + file, img_aug)
-                cv2.imwrite(path_label + file, label_aug)
+        files = os.listdir(self.train_path)
+        files = [file for file in files if file.endswith(self.img_type)]
+        for i in range(self.slices):
+            print("Split merge: " + str(i + 1))
+            path = path_merge + files[i]
+            train_imgs = os.listdir(path)
+            train_imgs = [img for img in train_imgs if img.endswith(self.img_type)]
+            for img in train_imgs:
+                print("File: " + img)
+                aug = cv2.imread(path + "/" + img)
+                img_aug = aug[:, :, 2]
+                label_aug = aug[:, :, 0]
+                cv2.imwrite(path_train + img, img_aug)
+                cv2.imwrite(path_label + img, label_aug)
+
 
 if __name__ == "__main__":
     aug = myAugmentation()

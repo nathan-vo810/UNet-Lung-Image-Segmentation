@@ -2,17 +2,27 @@ from keras.models import Model
 from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Dropout, merge
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
-from load_data import LoadData
+from load_data import *
+
+DIR = os.path.dirname(__file__)
+RESULT_PATH = os.path.join(DIR, "./dataset/training_data/result/")
 
 
-class UNet:
+class UNet(object):
     """UNet Implemenation"""
 
     def __init__(self, image_width=512, image_height=512):
-        self.image_shape = (image_width, image_height)
+        self.image_width = image_width
+        self.image_height = image_height
+
+    def load_data(self):
+        mydata = dataProcess(self.image_width, self.image_height)
+        images_train, labels_train = mydata.loadTrainData()
+        images_test = mydata.loadTestData()
+        return images_train, labels_train, images_test
 
     def build_unet(self):
-        inputs = Input(shape=self.image_shape)
+        inputs = Input(shape=(self.image_width, self.image_height, 1))
 
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
@@ -69,21 +79,32 @@ class UNet:
         return model
 
     def train(self):
-        # Load data for training
         print("Loading data")
-        # load data function -- to be implemented
-        data_loader = LoadData()
-        data_loader.load_images()
-        data_loader.load_label()
-        print("Loading data - DONE")
-
-        # Build Model and Train
-        UNet_model = self.build_unet()
-        print("Built Model")
+        images_train, labels_train, images_test = self.load_data()
+        print("Loading data done")
+        model = self.build_unet()
+        print("Got UNet")
+        model.summary()
         model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss', verbose=1, save_best_only=True)
         print("Fitting model...")
-        UNet_model.fit(batch_size=4, nb_epoch=10, verbose=1, validation_split=0.2, shuffle=True,
-                       callbacks=[model_checkpoint])
+        model.fit(images_train, labels_train, batch_size=4, epochs=10, verbose=1, validation_split=0.2, shuffle=True,
+                  callbacks=[model_checkpoint])
 
         print("Predict test data")
-        test_image = UNet_model.predict(batch_size=1, verbose=1)
+        labels_test = model.predict(images_test, batch_size=1, verbose=1)
+        np.save(RESULT_PATH + "labels_test.npy", labels_test)
+
+    def save_images(self):
+        print("Array to images")
+        images = np.load(RESULT_PATH + "labels_test.npy")
+        for i in range(images.shape[0]):
+            image = images[i]
+            image = array_to_img(image)
+            image.save(RESULT_PATH + "{filename}.jpg".format(i))
+
+
+if __name__ == "__main__":
+    print("Latest")
+    myUNet = UNet()
+    myUNet.train()
+    myUNet.save_images()
