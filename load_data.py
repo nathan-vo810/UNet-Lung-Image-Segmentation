@@ -100,8 +100,8 @@ class dataProcess(object):
         labels_train = labels_train.astype('float32')
         images_train /= 255
         labels_train /= 255
-        labels_train[labels_train > 0.5] = 1
-        labels_train[labels_train <= 0.5] = 0
+        labels_train[labels_train > 0.9] = 1
+        labels_train[labels_train <= 0.9] = 0
         return images_train, labels_train
 
     def loadTestData(self):
@@ -117,5 +117,6 @@ class dataProcess(object):
 
 if __name__ == "__main__":
     mydata = dataProcess(512,512)
+    # mydata.loadTrainData()
     # mydata.createTrainData()
-    mydata.createTestData()
+    # mydata.createTestData()

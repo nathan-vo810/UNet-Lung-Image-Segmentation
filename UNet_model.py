@@ -5,6 +5,7 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from load_data import *
 
 DIR = os.path.dirname(__file__)
+WEIGHTS_PATH = os.path.join(DIR, "./weights/unet-1.hdf5")
 RESULT_PATH = os.path.join(DIR, "./dataset/training_data/result/")
 
 
@@ -85,9 +86,12 @@ class UNet(object):
         model = self.build_unet()
         print("Got UNet")
         model.summary()
-        model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss', verbose=1, save_best_only=True)
+        # model.load_weights(WEIGHTS_PATH)
+        # print("Weights loaded")
+        weight_path = "unet-{loss:.2f}.hdf5"
+        model_checkpoint = ModelCheckpoint(weight_path, monitor='loss', verbose=1, save_best_only=True)
         print("Fitting model...")
-        model.fit(images_train, labels_train, batch_size=4, epochs=10, verbose=1, validation_split=0.2, shuffle=True,
+        model.fit(images_train, labels_train, batch_size=4, epochs=15, verbose=1, validation_split=0.2, shuffle=True,
                   callbacks=[model_checkpoint])
 
         print("Predict test data")
@@ -100,11 +104,11 @@ class UNet(object):
         for i in range(images.shape[0]):
             image = images[i]
             image = array_to_img(image)
-            image.save(RESULT_PATH + "{filename}.jpg".format(i))
+            image.save(RESULT_PATH + "{}.jpg".format(i))
 
 
 if __name__ == "__main__":
-    print("Latest")
+    print("Training new label...")
     myUNet = UNet()
     myUNet.train()
     myUNet.save_images()
