@@ -91,7 +91,7 @@ class UNet(object):
         weight_path = "unet-{loss:.2f}.hdf5"
         model_checkpoint = ModelCheckpoint(weight_path, monitor='loss', verbose=1, save_best_only=True)
         print("Fitting model...")
-        model.fit(images_train, labels_train, batch_size=4, epochs=15, verbose=1, validation_split=0.2, shuffle=True,
+        model.fit(images_train, labels_train, batch_size=4, epochs=10, verbose=1, validation_split=0.2, shuffle=True,
                   callbacks=[model_checkpoint])
 
         print("Predict test data")
