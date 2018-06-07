@@ -1,13 +1,14 @@
-from keras.models import Model
-from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Dropout, merge
+from keras.callbacks import ModelCheckpoint
+from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Dropout
 from keras.layers.merge import concatenate
+from keras.models import Model
 from keras.optimizers import Adam
-from keras.callbacks import ModelCheckpoint, LearningRateScheduler
-from load_data import *
+
+from src.keras.load_data import *
 
 DIR = os.path.dirname(__file__)
-WEIGHTS_PATH = os.path.join(DIR, "./weights/unet-1.hdf5")
-RESULT_PATH = os.path.join(DIR, "./dataset/training_data/result/")
+WEIGHTS_PATH = os.path.join(DIR, "../../weights-keras/unet-1.hdf5")
+RESULT_PATH = os.path.join(DIR, "../../dataset/training_data/result/")
 
 
 class UNet(object):
