@@ -7,9 +7,9 @@ import cv2
 # dir & path
 DIR = os.path.dirname(__file__)
 
-TRAIN_IMAGE_PATH = os.path.join(DIR, "../../dataset/training_data/train/")
-TEST_IMAGE_PATH = os.path.join(DIR, "../../dataset/training_data/test/")
-NUMPY_PATH = os.path.join(DIR,"../../dataset/training_data/npydata/")
+TRAIN_IMAGE_PATH = os.path.join(DIR, "../dataset/training_data/train/")
+TEST_IMAGE_PATH = os.path.join(DIR, "../dataset/training_data/test/")
+NUMPY_PATH = os.path.join(DIR,"../dataset/training_data/npydata/")
 
 IMAGE_PATH = TRAIN_IMAGE_PATH + "img/"
 LABEL_PATH = TRAIN_IMAGE_PATH + "label/"
