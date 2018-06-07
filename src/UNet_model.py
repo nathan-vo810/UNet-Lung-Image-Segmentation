@@ -3,8 +3,11 @@ from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Dropout
 from keras.layers.merge import concatenate
 from keras.models import Model
 from keras.optimizers import Adam
+import os
+import numpy as np
+from keras.preprocessing.image import array_to_img
 
-from src.keras.load_data import *
+from src import dataProcess
 
 DIR = os.path.dirname(__file__)
 WEIGHTS_PATH = os.path.join(DIR, "../../weights-keras/unet-1.hdf5")
